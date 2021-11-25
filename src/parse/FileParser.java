@@ -4,13 +4,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import graphe.Graphe;
-
 public class FileParser {
 		
-	public static Graphe parse(File fichier) throws FileNotFoundException {
+	public static ImageInfo parse(File fichier) throws FileNotFoundException {
 		
-		Graphe g = new Graphe();
+		ImageInfo g = new ImageInfo();
 		
 		Scanner sc = new Scanner(fichier);
 		
