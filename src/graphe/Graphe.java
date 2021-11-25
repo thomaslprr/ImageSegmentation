@@ -82,8 +82,42 @@ public class Graphe {
 		}
 	}
 	
-	public void getGrapheResiduel(){
+	public int[][] getGrapheResiduel(){
+		int[][] grapheResiduel = new int[sommets.size()][sommets.size()];
+		for(int i = 0 ; i<sommets.size();i++) {
+			for(Arc arc : sommets.get(i).getArcs()) {
+					grapheResiduel[i][arc.getSommetDestination().getId()]= arc.getCapacite()-arc.getFlot();
+					grapheResiduel[arc.getSommetDestination().getId()][i]= arc.getFlot();
+			}
+		}
+		return grapheResiduel;
+	}
+	
+	
+	public boolean estElevable(Sommet s) {
+		Integer min =null;
 		
+		if(!(s.getExcedent()>0)) {
+			return false;
+		}
+		
+		
+		for(int i =0 ; i<this.getGrapheResiduel()[1].length;i++) {
+			if(this.getGrapheResiduel()[s.getId()][i]>0) {
+				if(s.getHauteur()<= sommets.get(i).getHauteur()) {
+					if(min==null || sommets.get(i).getHauteur()<min) {
+						min= sommets.get(i).getHauteur()+1;
+					}
+				}
+			}
+		}
+		
+		if(min!=null) {
+			s.setHauteur(min+1);
+			return true;
+		}
+		
+		return false;
 	}
 	
 	

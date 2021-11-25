@@ -107,42 +107,6 @@ public class Sommet {
 
 	public void setExcedent(int excedent) {
 		this.excedent = excedent;
-	}
-	
-	public boolean estElevable() {
-		Integer min =null;
-		
-		if(!(this.excedent>0)) {
-			return false;
-		}
-		for(Arc arc: this.arcs) {
-			if(!(arc.getFlot()==arc.getCapacite())) {
-				if(this.hauteur <= arc.getSommetDestination().getHauteur()) {
-					if(min==null || arc.getSommetDestination().getHauteur()<min) {
-						min = arc.getSommetDestination().getHauteur()+1;
-					}
-				}
-			}
-		}
-		
-		if(min!=null) {
-			this.hauteur=min+1;
-			return true;
-		}
-		
-		return false;
-	}
-	
-	public boolean peutAvancer() {
-		if(!(this.excedent>0)) {
-			return false;
-		}
-		
-		
-		return false;
-	}
-	
-	
-	
+	}	
 
 }
