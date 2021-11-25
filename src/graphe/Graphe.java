@@ -9,12 +9,14 @@ public class Graphe {
 	private ArrayList<Sommet> sommets = new ArrayList<>();
 	private Sommet premierSommet ;
 	private int largeur;
+	private int nbSommet=0;
 	
 
 	public Graphe(ImageInfo imageInfo) {
 		this.largeur = imageInfo.getNbColonnes();
 		int hauteur = imageInfo.getNbLignes();
 		int nbPixels = imageInfo.getNbColonnes()*imageInfo.getNbLignes();
+		nbSommet = nbPixels+2;
 		
 		Sommet s = new Sommet(0,new ArrayList<Arc>(),true,false,0,0);
 		sommets.add(s);
@@ -70,6 +72,15 @@ public class Graphe {
 	public void setPremierSommet(Sommet premierSommet) {
 		this.premierSommet = premierSommet;
 	}
+	
+	public void executerPreflot() {
+		this.premierSommet.setHauteur(nbSommet);
+		for(Arc arc : this.premierSommet.getArcs()) {
+			arc.setFlot(arc.getCapacite());
+			arc.getSommetDestination().setExcedent(arc.getCapacite());
+		}
+	}
+	
 	
 	
 	public static int[] getIndice(int largeur,int index){

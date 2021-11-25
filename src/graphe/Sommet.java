@@ -10,6 +10,8 @@ public class Sommet {
 	private boolean estPuit ;
 	private int aProba ;
 	private int bProba ;
+	private int hauteur;
+	private int excedent;
 	
 
 	public Sommet(int id, ArrayList<Arc> arcs, boolean estSource, boolean estPuit, int aProba, int bProba) {
@@ -19,6 +21,8 @@ public class Sommet {
 		this.estPuit = estPuit;
 		this.aProba = aProba;
 		this.bProba = bProba;
+		this.hauteur= 0;
+		this.excedent=0;
 	}
 
 
@@ -83,6 +87,50 @@ public class Sommet {
 	
 	public void ajouterArc(Arc a) {
 		this.arcs.add(a);
+	}
+
+
+	public int getHauteur() {
+		return hauteur;
+	}
+
+
+	public void setHauteur(int hauteur) {
+		this.hauteur = hauteur;
+	}
+
+
+	public int getExcedent() {
+		return excedent;
+	}
+
+
+	public void setExcedent(int excedent) {
+		this.excedent = excedent;
+	}
+	
+	public boolean estElevable() {
+		Integer min =null;
+		
+		if(!(this.excedent>0)) {
+			return false;
+		}
+		for(Arc arc: this.arcs) {
+			if(!(arc.getFlot()==arc.getCapacite())) {
+				if(this.hauteur <= arc.getSommetDestination().getHauteur()) {
+					if(min==null || arc.getSommetDestination().getHauteur()<min) {
+						min = arc.getSommetDestination().getHauteur()+1;
+					}
+				}
+			}
+		}
+		
+		if(min!=null) {
+			this.hauteur=min+1;
+			return true;
+		}
+		
+		return false;
 	}
 	
 	
