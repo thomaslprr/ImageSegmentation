@@ -15,6 +15,8 @@ public class Main {
 		ImageInfo imageInfo = FileParser.parse(file);
 		System.out.println(imageInfo);
 		Graphe g = new Graphe(imageInfo);
+		g.afficherGrapheResiduel();
+		
 	}
 
 }

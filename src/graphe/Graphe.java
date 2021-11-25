@@ -19,7 +19,6 @@ public class Graphe {
 		nbSommet = nbPixels+2;
 		
 		Sommet s = new Sommet(0,new ArrayList<Arc>(),true,false,0,0);
-		sommets.add(s);
 		this.setPremierSommet(s);
 		Sommet p = new Sommet(nbPixels+1,new ArrayList<Arc>(),false,true,0,0);
 		//Pour tous les pixels
@@ -56,6 +55,7 @@ public class Graphe {
 			}
 					
 		}
+		sommets.add(0, s);
 		sommets.add(p);
 	}
 	
@@ -85,12 +85,24 @@ public class Graphe {
 	public int[][] getGrapheResiduel(){
 		int[][] grapheResiduel = new int[sommets.size()][sommets.size()];
 		for(int i = 0 ; i<sommets.size();i++) {
+			System.out.println("SOMMET : "+i);
 			for(Arc arc : sommets.get(i).getArcs()) {
+				System.out.println("ARC : de "+i+" vers "+arc.getSommetDestination().getId()+" val : "+arc.getCapacite());
 					grapheResiduel[i][arc.getSommetDestination().getId()]= arc.getCapacite()-arc.getFlot();
-					grapheResiduel[arc.getSommetDestination().getId()][i]= arc.getFlot();
+					grapheResiduel[arc.getSommetDestination().getId()][i]= -arc.getFlot();
 			}
 		}
 		return grapheResiduel;
+	}
+	
+	public void afficherGrapheResiduel(){
+		int[][] gr = this.getGrapheResiduel();
+		for(int i =0 ; i< sommets.size();i++) {
+			for(int j=0; j<sommets.size();j++) {
+				System.out.print(gr[i][j]+" ");
+			}
+			System.out.println();
+		}
 	}
 	
 	
