@@ -72,13 +72,18 @@ public class Graphe {
 	public void setPremierSommet(Sommet premierSommet) {
 		this.premierSommet = premierSommet;
 	}
+
 	
-	public void executerPreflot() {
+	public void executerInitialisationPreflot() {
 		this.premierSommet.setHauteur(nbSommet);
 		for(Arc arc : this.premierSommet.getArcs()) {
 			arc.setFlot(arc.getCapacite());
 			arc.getSommetDestination().setExcedent(arc.getCapacite());
 		}
+	}
+	
+	public void getGrapheResiduel(){
+		
 	}
 	
 	

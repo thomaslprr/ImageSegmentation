@@ -133,6 +133,15 @@ public class Sommet {
 		return false;
 	}
 	
+	public boolean peutAvancer() {
+		if(!(this.excedent>0)) {
+			return false;
+		}
+		
+		
+		return false;
+	}
+	
 	
 	
 
