@@ -12,6 +12,7 @@ import parse.ImageInfo;
 public class Main {
 	
 	public static void main(String[] args) throws FileNotFoundException {
+<<<<<<< HEAD
 		
 		File file = new File(args[0]);
 		ImageInfo imageInfo = FileParser.parse(file);
@@ -23,6 +24,19 @@ public class Main {
 		g.afficherPlans();
 		
 		
+=======
+		if (args.length < 1) {
+			System.out.println("Must give a file path as argument");
+		} else {
+			System.out.println(args[0]);
+			File file = new File(args[0]);
+			ImageInfo imageInfo = FileParser.parse(file);
+			System.out.println(imageInfo);
+			Graphe g = new Graphe(imageInfo);
+			g.executerInitialisationPreflot();
+			g.afficherGrapheResiduel();
+		}
+>>>>>>> branch 'master' of https://github.com/thomaslprr/ImageSegmentation.git
 	}
 
 }
