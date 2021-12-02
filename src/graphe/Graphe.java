@@ -10,6 +10,7 @@ public class Graphe {
 	private Sommet premierSommet ;
 	private int largeur;
 	private int nbSommet=0;
+	private int[][] grapheResiduel;
 	
 
 	public Graphe(ImageInfo imageInfo) {
@@ -72,7 +73,6 @@ public class Graphe {
 	public void setPremierSommet(Sommet premierSommet) {
 		this.premierSommet = premierSommet;
 	}
-
 	
 	public void executerInitialisationPreflot() {
 		this.premierSommet.setHauteur(nbSommet);
@@ -80,9 +80,10 @@ public class Graphe {
 			arc.setFlot(arc.getCapacite());
 			arc.getSommetDestination().setExcedent(arc.getCapacite());
 		}
+		setGrapheResiduel();
 	}
 	
-	public int[][] getGrapheResiduel(){
+	public void setGrapheResiduel(){
 		int[][] grapheResiduel = new int[sommets.size()][sommets.size()];
 		for(int i = 0 ; i<sommets.size();i++) {
 			System.out.println("SOMMET : "+i);
@@ -92,11 +93,21 @@ public class Graphe {
 					grapheResiduel[arc.getSommetDestination().getId()][i]= -arc.getFlot();
 			}
 		}
-		return grapheResiduel;
+		this.grapheResiduel = grapheResiduel;
 	}
 	
+	public void setGrapheResiduel(int[][] grapheResiduel){
+		this.grapheResiduel = grapheResiduel;
+	}
+	
+	
+	public int[][] getGrapheResiduel() {
+		return grapheResiduel;
+	}
+
+
 	public void afficherGrapheResiduel(){
-		int[][] gr = this.getGrapheResiduel();
+		int[][] gr = this.grapheResiduel;
 		for(int i =0 ; i< sommets.size();i++) {
 			for(int j=0; j<sommets.size();j++) {
 				System.out.print(gr[i][j]+" ");
@@ -114,8 +125,8 @@ public class Graphe {
 		}
 		
 		
-		for(int i =0 ; i<this.getGrapheResiduel()[1].length;i++) {
-			if(this.getGrapheResiduel()[s.getId()][i]>0) {
+		for(int i =0 ; i<this.grapheResiduel[1].length;i++) {
+			if(this.grapheResiduel[s.getId()][i]>0) {
 				if(s.getHauteur()<= sommets.get(i).getHauteur()) {
 					if(min==null || sommets.get(i).getHauteur()<min) {
 						min= sommets.get(i).getHauteur()+1;
@@ -130,6 +141,32 @@ public class Graphe {
 		}
 		
 		return false;
+	}
+	
+	public boolean peutAvancer(Sommet s,Arc a) {
+		
+		if(!(s.getExcedent()>0)) {
+			return false;
+		}
+		
+		if(!(s.getHauteur()==a.getSommetDestination().getHauteur())) {
+			return false;
+		}
+		
+		if(!(this.grapheResiduel[s.getId()][a.getSommetDestination().getId()]>0)) {
+			return false;
+		}
+		
+		int val = Math.min(s.getExcedent(), a.getCapacite());
+		a.setFlot(val);
+		s.setExcedent(s.getExcedent()-val);
+		a.getSommetDestination().setExcedent(a.getSommetDestination().getExcedent()+val);
+		
+		this.grapheResiduel[s.getId()][a.getSommetDestination().getId()]-= val ;
+		this.grapheResiduel[a.getSommetDestination().getId()][s.getId()]+= val ;
+		
+		return true;
+
 	}
 	
 	
