@@ -82,6 +82,7 @@ public class FileParser {
 
 	    }
 		
+		sc.close();
 	    
 	    return g;
 		

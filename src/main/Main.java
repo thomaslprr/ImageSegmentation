@@ -10,14 +10,17 @@ import parse.ImageInfo;
 public class Main {
 	
 	public static void main(String[] args) throws FileNotFoundException {
-		
-		File file = new File(args[0]);
-		ImageInfo imageInfo = FileParser.parse(file);
-		System.out.println(imageInfo);
-		Graphe g = new Graphe(imageInfo);
-		g.executerInitialisationPreflot();
-		g.afficherGrapheResiduel();
-		
+		if (args.length < 1) {
+			System.out.println("Must give a file path as argument");
+		} else {
+			System.out.println(args[0]);
+			File file = new File(args[0]);
+			ImageInfo imageInfo = FileParser.parse(file);
+			System.out.println(imageInfo);
+			Graphe g = new Graphe(imageInfo);
+			g.executerInitialisationPreflot();
+			g.afficherGrapheResiduel();
+		}
 	}
 
 }
