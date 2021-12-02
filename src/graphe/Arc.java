@@ -4,10 +4,11 @@ public class Arc {
 	
 	private int flot;
 	private int capacite;
+	private Sommet sommetSource;
 	private Sommet sommetDestination;
 	
 	
-	public Arc(int flot, int capacite, Sommet sommetDestination) {
+	public Arc(int flot, int capacite,Sommet sommetDestination) {
 		super();
 		this.flot = flot;
 		this.capacite = capacite;
@@ -30,6 +31,12 @@ public class Arc {
 	}
 	public void setSommetDestination(Sommet sommetDestination) {
 		this.sommetDestination = sommetDestination;
+	}
+	public Sommet getSommetSource() {
+		return sommetSource;
+	}
+	public void setSommetSource(Sommet sommetSource) {
+		this.sommetSource = sommetSource;
 	}
 	
 	

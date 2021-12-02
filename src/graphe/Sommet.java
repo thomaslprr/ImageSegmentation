@@ -86,6 +86,7 @@ public class Sommet {
 	}
 	
 	public void ajouterArc(Arc a) {
+		a.setSommetSource(this);
 		this.arcs.add(a);
 	}
 

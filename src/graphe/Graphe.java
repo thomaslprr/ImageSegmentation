@@ -8,9 +8,9 @@ public class Graphe {
 	
 	private ArrayList<Sommet> sommets = new ArrayList<>();
 	private Sommet premierSommet ;
+	private Sommet dernierSommet ;
 	private int largeur;
 	private int nbSommet=0;
-	private int[][] grapheResiduel;
 	
 
 	public Graphe(ImageInfo imageInfo) {
@@ -22,6 +22,7 @@ public class Graphe {
 		Sommet s = new Sommet(0,new ArrayList<Arc>(),true,false,0,0);
 		this.setPremierSommet(s);
 		Sommet p = new Sommet(nbPixels+1,new ArrayList<Arc>(),false,true,0,0);
+		this.setDernierSommet(p);
 		//Pour tous les pixels
 		for(int i=0;i<nbPixels;i++) {
 			Sommet pixel = new Sommet(i+1,new ArrayList<Arc>(),false,false,0,0);
@@ -79,96 +80,119 @@ public class Graphe {
 		for(Arc arc : this.premierSommet.getArcs()) {
 			arc.setFlot(arc.getCapacite());
 			arc.getSommetDestination().setExcedent(arc.getCapacite());
+			arc.getSommetDestination().ajouterArc(new Arc(-arc.getCapacite(),0,this.premierSommet));
 		}
-		setGrapheResiduel();
-	}
-	
-	public void setGrapheResiduel(){
-		int[][] grapheResiduel = new int[sommets.size()][sommets.size()];
-		for(int i = 0 ; i<sommets.size();i++) {
-			System.out.println("SOMMET : "+i);
-			for(Arc arc : sommets.get(i).getArcs()) {
-				System.out.println("ARC : de "+i+" vers "+arc.getSommetDestination().getId()+" val : "+arc.getCapacite());
-					grapheResiduel[i][arc.getSommetDestination().getId()]= arc.getCapacite()-arc.getFlot();
-					grapheResiduel[arc.getSommetDestination().getId()][i]= -arc.getFlot();
-			}
-		}
-		this.grapheResiduel = grapheResiduel;
-	}
-	
-	public void setGrapheResiduel(int[][] grapheResiduel){
-		this.grapheResiduel = grapheResiduel;
-	}
-	
-	
-	public int[][] getGrapheResiduel() {
-		return grapheResiduel;
 	}
 
 
-	public void afficherGrapheResiduel(){
-		int[][] gr = this.grapheResiduel;
-		for(int i =0 ; i< sommets.size();i++) {
-			for(int j=0; j<sommets.size();j++) {
-				System.out.print(gr[i][j]+" ");
-			}
-			System.out.println();
+	public void elever(Sommet s) {
+		Integer min =Integer.MAX_VALUE;
+		
+		if(s.isEstPuit()||s.isEstSource()) {
+			return;
 		}
+		
+		if(!(s.getExcedent()>0)) {
+			return;
+		}
+		
+		
+		for(Arc a : s.getArcs()) {
+			if((a.getFlot() != a.getCapacite())&& (a.getSommetDestination().getHauteur()<min)) {
+				min = a.getSommetDestination().getHauteur();
+				s.setHauteur(min+1);
+			}
+		}
+		
 	}
 	
-	
-	public boolean estElevable(Sommet s) {
-		Integer min =null;
+	public boolean peutAvancer(Sommet s) {
+		
+		if(s.isEstPuit()|| s.isEstSource()) {
+			return false;
+		}
 		
 		if(!(s.getExcedent()>0)) {
 			return false;
 		}
 		
-		
-		for(int i =0 ; i<this.grapheResiduel[1].length;i++) {
-			if(this.grapheResiduel[s.getId()][i]>0) {
-				if(s.getHauteur()<= sommets.get(i).getHauteur()) {
-					if(min==null || sommets.get(i).getHauteur()<min) {
-						min= sommets.get(i).getHauteur()+1;
-					}
-				}
+
+		for(Arc a : s.getArcs()) {
+			
+			
+			if((s.getHauteur()>a.getSommetDestination().getHauteur())&&(a.getFlot() != a.getCapacite())) {
+						
+					int val = Math.min(s.getExcedent(), a.getCapacite()-a.getFlot());
+					s.setExcedent(s.getExcedent()-val);
+					a.setFlot(a.getFlot()+val);
+					a.getSommetDestination().setExcedent(a.getSommetDestination().getExcedent()+val);
+					modifierArcInverse(a, val);					
+						
+					return true;
 			}
-		}
-		
-		if(min!=null) {
-			s.setHauteur(min+1);
-			return true;
 		}
 		
 		return false;
+		
 	}
 	
-	public boolean peutAvancer(Sommet s,Arc a) {
+	
+	
+	public int executerPreflot() {
 		
-		if(!(s.getExcedent()>0)) {
-			return false;
+		executerInitialisationPreflot();
+		Sommet sommetActif = getSommetAvecExcedent();
+		while (sommetActif != null) {
+			if (!peutAvancer(sommetActif)) {
+		        elever(sommetActif);
+		    }
+		    sommetActif = getSommetAvecExcedent();
 		}
-		
-		if(!(s.getHauteur()==a.getSommetDestination().getHauteur())) {
-			return false;
-		}
-		
-		if(!(this.grapheResiduel[s.getId()][a.getSommetDestination().getId()]>0)) {
-			return false;
-		}
-		
-		int val = Math.min(s.getExcedent(), a.getCapacite());
-		a.setFlot(val);
-		s.setExcedent(s.getExcedent()-val);
-		a.getSommetDestination().setExcedent(a.getSommetDestination().getExcedent()+val);
-		
-		this.grapheResiduel[s.getId()][a.getSommetDestination().getId()]-= val ;
-		this.grapheResiduel[a.getSommetDestination().getId()][s.getId()]+= val ;
-		
-		return true;
 
+		return this.sommets.get(this.sommets.size()-1).getExcedent();		
+		   
 	}
 	
+	private void modifierArcInverse(Arc a, int flot) {
+	    for (Arc ar : a.getSommetDestination().getArcs()) {
+	      if (ar.getSommetDestination().equals(a.getSommetSource())) {
+	        ar.setFlot(ar.getFlot()-flot);
+	        return;
+	      }
+	    }
+
+	    a.getSommetDestination().ajouterArc(new Arc(-flot,0,a.getSommetSource())); 
+	}
+	
+	
+	public Sommet getSommetAvecExcedent() {
+	    for (int i = 1; i < this.sommets.size()-1; i++) {
+	      if (this.sommets.get(i).getExcedent() > 0) {
+	        return this.sommets.get(i);
+	      }
+	    }
+	    return null;
+	  }
+	
+	
+	public ArrayList<Sommet> afficherSommetAccessible(){
+		ArrayList<Sommet> listePlan1 = new ArrayList<>();
+		this.recAfficherSommetAccessible(listePlan1,this.getPremierSommet());
+		listePlan1.remove(this.getPremierSommet());
+		listePlan1.remove(this.getDernierSommet());
+		return listePlan1;
+	}
+	
+	private void recAfficherSommetAccessible(ArrayList<Sommet> listeSommets,Sommet s) {
+		for(Arc a : s.getArcs()) {
+			if(a.getFlot()!=a.getCapacite()) {
+				if(!listeSommets.contains(a.getSommetDestination())) {
+					listeSommets.add(a.getSommetDestination());
+					recAfficherSommetAccessible(listeSommets,a.getSommetDestination());			
+				}
+			}
+		}
+	}
 	
 	
 	public static int[] getIndice(int largeur,int index){
@@ -177,5 +201,47 @@ public class Graphe {
 		res[1] = index % largeur;
 		return res;
 	}
+
+
+	public Sommet getDernierSommet() {
+		return dernierSommet;
+	}
+
+
+	public void setDernierSommet(Sommet dernierSommet) {
+		this.dernierSommet = dernierSommet;
+	}
+	
+	public void afficherPlans() {
+		
+		ArrayList<Sommet> premierPlan = afficherSommetAccessible();
+		for(int i=1;i<this.sommets.size()-1;i++) {
+			if(premierPlan.contains(this.sommets.get(i))) {
+				System.out.print("A ");
+			}else {
+				System.out.print("B ");
+			}
+			if(i%largeur==0) {
+				System.out.println();
+			}
+		}
+		
+	}
+	
+	public ArrayList<ArrayList<Sommet>> resoudreBinMin(){
+
+		ArrayList<ArrayList<Sommet>> ensemblePixels =  new ArrayList<>();
+		//ensemble1
+		ArrayList<Sommet> premierPlan = afficherSommetAccessible();
+		ensemblePixels.add(premierPlan);
+		//ensemble 2
+		ArrayList<Sommet> deuxiemePlan = this.getSommets();
+		deuxiemePlan.remove(this.getPremierSommet());
+		deuxiemePlan.remove(this.getDernierSommet());
+		deuxiemePlan.removeAll(premierPlan);
+		ensemblePixels.add(deuxiemePlan);
+		return ensemblePixels;
+	}
+	
 	
 }
