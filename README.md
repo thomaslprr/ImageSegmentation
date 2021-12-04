@@ -21,18 +21,18 @@ Thomas Lapierre et Lucas Lelièvre
 ```--info``` : Affichage des informations du parsing du fichier texte d'entrée
 
 
-#### Exemple 1
+## Exemple 1
 
 ```java -jar imageSegmentation.jar data/deuxlunes.txt -p```
 
-##### Résultat
-<img src="https://github.com/thomaslprr/ImageSegmentation/blob/master/readme-image/demo-result.png" width="350">
+### Résultat
+<img src="https://github.com/thomaslprr/ImageSegmentation/blob/master/readme-image/demo-result.png" width="450">
 
-#### Exemple 2
+## Exemple 2
 
 ```java -jar imageSegmentation.jar data/demo_sujet.txt -a --info```
 
-##### Résultat
+### Résultat
 
 <img src="https://github.com/thomaslprr/ImageSegmentation/blob/master/readme-image/demo-result-2.png" width="350">
 
