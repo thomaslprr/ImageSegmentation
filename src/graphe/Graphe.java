@@ -15,7 +15,6 @@ public class Graphe {
 
 	public Graphe(ImageInfo imageInfo) {
 		this.largeur = imageInfo.getNbColonnes();
-		int hauteur = imageInfo.getNbLignes();
 		int nbPixels = imageInfo.getNbColonnes()*imageInfo.getNbLignes();
 		nbSommet = nbPixels+2;
 		
@@ -217,15 +216,30 @@ public class Graphe {
 		ArrayList<Sommet> premierPlan = afficherSommetAccessible();
 		for(int i=1;i<this.sommets.size()-1;i++) {
 			if(premierPlan.contains(this.sommets.get(i))) {
-				System.out.print("A ");
+				System.out.print("O ");
 			}else {
-				System.out.print("B ");
+				System.out.print("- ");
 			}
 			if(i%largeur==0) {
 				System.out.println();
 			}
 		}
 		
+	}
+	
+	public void afficherPlans(ArrayList<Sommet> premierPlan) {
+			
+			for(int i=1;i<this.sommets.size()-1;i++) {
+				if(premierPlan.contains(this.sommets.get(i))) {
+					System.out.print("O ");
+				}else {
+					System.out.print("- ");
+				}
+				if(i%largeur==0) {
+					System.out.println();
+				}
+			}
+			
 	}
 	
 	public ArrayList<ArrayList<Sommet>> resoudreBinMin(){
@@ -235,7 +249,8 @@ public class Graphe {
 		ArrayList<Sommet> premierPlan = afficherSommetAccessible();
 		ensemblePixels.add(premierPlan);
 		//ensemble 2
-		ArrayList<Sommet> deuxiemePlan = this.getSommets();
+		ArrayList<Sommet> deuxiemePlan = new ArrayList<>(this.getSommets());
+		
 		deuxiemePlan.remove(this.getPremierSommet());
 		deuxiemePlan.remove(this.getDernierSommet());
 		deuxiemePlan.removeAll(premierPlan);
