@@ -18,7 +18,7 @@ Thomas Lapierre et Lucas Lelièvre
 | -a          | Affiche les pixels présents dans les plans un et deux et renvoie la représentation graphique de la segmentation de l'image. |
 | -p          | Affiche uniquement la représentation graphique de la segmentation de l'image.                                          |
 
-```--info``` : Affichage des informations du parsing du fichier texte d'entré
+```--info``` : Affichage des informations du parsing du fichier texte d'entrée
 
 
 #### Exemple 1
