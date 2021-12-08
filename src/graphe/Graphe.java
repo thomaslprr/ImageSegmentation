@@ -1,6 +1,7 @@
 package graphe;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import parse.ImageInfo;
 
@@ -17,6 +18,11 @@ public class Graphe {
 	 */
 	public Graphe(ImageInfo imageInfo) {
 		this.largeur = imageInfo.getNbColonnes();
+		constructionReseau(imageInfo);
+		
+	}
+	
+	private void constructionReseau(ImageInfo imageInfo) {
 		int nbPixels = imageInfo.getNbColonnes()*imageInfo.getNbLignes();
 
 		Sommet s = new Sommet(0,new ArrayList<Arc>(),true,false,0,0);
@@ -59,7 +65,6 @@ public class Graphe {
 		}
 		sommets.add(0, s);
 		sommets.add(p);
-		
 	}
 	
 	//IMPLEMENTATION DE L'ALGORITHME DES PREFLOTS
@@ -146,7 +151,7 @@ public class Graphe {
 	 * Méthode pour exécuter l'algorithme des préflots 
 	 * @return Le flot maximum
 	 */
-	public int executerPreflot() {
+	public int calculFlotMax() {
 		
 		executerInitialisationPreflot();
 		Sommet sommetActif = getSommetAvecExcedent();
@@ -195,7 +200,7 @@ public class Graphe {
 	 * Méthode qui retourne les sommets de la coupe minimum
 	 * @return liste des sommets de la coupe minimum
 	 */
-	public ArrayList<Sommet> afficherSommetAccessible(){
+	public ArrayList<Sommet> calculCoupeMin(){
 		ArrayList<Sommet> listePlan1 = new ArrayList<>();
 		this.recAfficherSommetAccessible(listePlan1,this.getPremierSommet());
 		//on supprime le sommet source
@@ -224,7 +229,7 @@ public class Graphe {
 	 *  La méthode calcule les sommets présents dans le premier plan
 	 */
 	public void afficherPlans() {
-		ArrayList<Sommet> premierPlan = afficherSommetAccessible();
+		ArrayList<Sommet> premierPlan = calculCoupeMin();
 		for(int i=1;i<this.sommets.size()-1;i++) {
 			if(premierPlan.contains(this.sommets.get(i))) {
 				System.out.print("O ");
@@ -244,7 +249,7 @@ public class Graphe {
 	 *  La méthode n'a pas a calculer les sommets présents dans le premier plan
 	 * @param premierPlan Sommets présents dans le premier plan
 	 */
-	public void afficherPlans(ArrayList<Sommet> premierPlan) {
+	public void afficherPlans(HashSet<Sommet> premierPlan) {
 			
 		for(int i=1;i<this.sommets.size()-1;i++) {
 			if(premierPlan.contains(this.sommets.get(i))) {
@@ -263,14 +268,14 @@ public class Graphe {
 	 * et la liste des sommets présents dans le deuxième plan
 	 * @return
 	 */
-	public ArrayList<ArrayList<Sommet>> resoudreBinMin(){
+	public ArrayList<HashSet<Sommet>> resoudreBinMin(){
 
-		ArrayList<ArrayList<Sommet>> ensemblePixels =  new ArrayList<>();
+		ArrayList<HashSet<Sommet>> ensemblePixels =  new ArrayList<>();
 		//ensemble1
-		ArrayList<Sommet> premierPlan = afficherSommetAccessible();
+		HashSet<Sommet> premierPlan = new HashSet<>(calculCoupeMin());
 		ensemblePixels.add(premierPlan);
 		//ensemble 2
-		ArrayList<Sommet> deuxiemePlan = new ArrayList<>(this.getSommets());
+		HashSet<Sommet> deuxiemePlan = new HashSet<>(this.getSommets());
 		
 		//on supprime le sommet source
 		deuxiemePlan.remove(this.getPremierSommet());

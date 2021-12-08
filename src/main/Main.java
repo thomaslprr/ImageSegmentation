@@ -3,6 +3,7 @@ package main;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import graphe.Graphe;
 import graphe.Sommet;
@@ -31,10 +32,10 @@ public class Main {
 			
 			Graphe g = new Graphe(imageInfo);
 			System.out.println("FLOT MAXIMUM");
-			System.out.println(g.executerPreflot());
+			System.out.println(g.calculFlotMax());
 			
 			if(args[1].equals("-a")) {
-				ArrayList<ArrayList<Sommet>> binmin = g.resoudreBinMin();
+				ArrayList<HashSet<Sommet>> binmin = g.resoudreBinMin();
 				
 				System.out.println("PIXEL PREMIER PLAN");
 				for(Sommet s : binmin.get(0)) {
