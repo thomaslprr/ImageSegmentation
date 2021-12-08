@@ -2,6 +2,7 @@ package graphe;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.TreeSet;
 
 import parse.ImageInfo;
 
@@ -200,8 +201,8 @@ public class Graphe {
 	 * Méthode qui retourne les sommets de la coupe minimum
 	 * @return liste des sommets de la coupe minimum
 	 */
-	public ArrayList<Sommet> calculCoupeMin(){
-		ArrayList<Sommet> listePlan1 = new ArrayList<>();
+	public HashSet<Sommet> calculCoupeMin(){
+		HashSet<Sommet> listePlan1 = new HashSet<Sommet>();
 		this.recAfficherSommetAccessible(listePlan1,this.getPremierSommet());
 		//on supprime le sommet source
 		listePlan1.remove(this.getPremierSommet());
@@ -210,7 +211,7 @@ public class Graphe {
 		return listePlan1;
 	}
 	
-	private void recAfficherSommetAccessible(ArrayList<Sommet> listeSommets,Sommet s) {
+	private void recAfficherSommetAccessible(HashSet<Sommet> listeSommets,Sommet s) {
 		for(Arc a : s.getArcs()) {
 			if(a.getFlot()!=a.getCapacite()) {
 				//si le sommet n'est pas déjà présent dans la liste
@@ -229,7 +230,7 @@ public class Graphe {
 	 *  La méthode calcule les sommets présents dans le premier plan
 	 */
 	public void afficherPlans() {
-		ArrayList<Sommet> premierPlan = calculCoupeMin();
+		HashSet<Sommet> premierPlan = calculCoupeMin();
 		for(int i=1;i<this.sommets.size()-1;i++) {
 			if(premierPlan.contains(this.sommets.get(i))) {
 				System.out.print("O ");
@@ -272,10 +273,10 @@ public class Graphe {
 
 		ArrayList<HashSet<Sommet>> ensemblePixels =  new ArrayList<>();
 		//ensemble1
-		HashSet<Sommet> premierPlan = new HashSet<>(calculCoupeMin());
+		HashSet<Sommet> premierPlan = calculCoupeMin();
 		ensemblePixels.add(premierPlan);
 		//ensemble 2
-		HashSet<Sommet> deuxiemePlan = new HashSet<>(this.getSommets());
+		HashSet<Sommet> deuxiemePlan = new HashSet<Sommet>(this.getSommets());
 		
 		//on supprime le sommet source
 		deuxiemePlan.remove(this.getPremierSommet());

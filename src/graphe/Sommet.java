@@ -2,7 +2,7 @@ package graphe;
 
 import java.util.ArrayList;
 
-public class Sommet {
+public class Sommet implements Comparable<Sommet>{
 	
 	private int id;
 	private ArrayList<Arc> arcs = new ArrayList<>();
@@ -108,6 +108,17 @@ public class Sommet {
 
 	public void setExcedent(int excedent) {
 		this.excedent = excedent;
+	}
+
+
+	@Override
+	public int compareTo(Sommet s) {
+		if(s.getId()>this.getId())
+			return 1;
+		else if(s.getId()<this.getId())
+			return -1;
+		else 
+			return 0;
 	}	
 
 }
