@@ -267,7 +267,6 @@ public class Graphe {
 	/**
 	 * Methode qui renvoie la liste des sommets présents dans le premier plan
 	 * et la liste des sommets présents dans le deuxième plan
-	 * @return
 	 */
 	public ArrayList<HashSet<Sommet>> resoudreBinMin(){
 
