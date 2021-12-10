@@ -1,0 +1,2 @@
+Un petit module pour convertir une photo en fichier texte a été réalisé. 
+Il produit un résultat satisfaisant pour le module ImageSegmentation si la photo a un fort contraste (noir sur blanc par exemple).
